@@ -32,6 +32,13 @@ export default function BookPage() {
     setSubmitStatus('idle');
 
     try {
+      if (!supabase) {
+        console.error('Supabase client not initialized');
+        setSubmitStatus('error');
+        setIsSubmitting(false);
+        return;
+      }
+
       const { data, error } = await supabase
         .from('bookings')
         .insert([
