@@ -33,11 +33,15 @@ export default function BookPage() {
 
     try {
       if (!supabase) {
-        console.error('Supabase client not initialized');
+        console.error('Supabase client not initialized - check environment variables');
+        console.log('NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL ? 'Set' : 'Missing');
+        console.log('NEXT_PUBLIC_SUPABASE_ANON_KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'Set' : 'Missing');
         setSubmitStatus('error');
         setIsSubmitting(false);
         return;
       }
+
+      console.log('Submitting booking:', { name: formData.name, email: formData.email, date: formData.date });
 
       const { data, error } = await supabase
         .from('bookings')
@@ -54,9 +58,12 @@ export default function BookPage() {
         ]);
 
       if (error) {
-        console.error('Booking error:', error);
+        console.error('Booking error details:', error);
+        console.error('Error message:', error.message);
+        console.error('Error code:', error.code);
         setSubmitStatus('error');
       } else {
+        console.log('Booking successful:', data);
         setSubmitStatus('success');
         setSubmittedData(formData);
         setFormData({
