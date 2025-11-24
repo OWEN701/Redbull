@@ -16,6 +16,7 @@ export default function Header() {
     { href: '/experiences', label: 'Experiences' },
     { href: '/gallery', label: 'Gallery' },
     { href: '/find-us', label: 'Find Us' },
+    { href: '/book', label: 'Book a Table' },
   ];
 
   return (
@@ -40,10 +41,9 @@ export default function Header() {
             ))}
             <Button
               variant="primary"
-              href="https://book.mysimpleerb.com/?id=TheRedBull"
-              external
+              href="/book"
             >
-              Book a Table
+              Book Now
             </Button>
           </nav>
 
@@ -78,11 +78,10 @@ export default function Header() {
             <div className="pt-4 space-y-3">
               <Button
                 variant="primary"
-                href="https://book.mysimpleerb.com/?id=TheRedBull"
-                external
+                href="/book"
                 className="w-full"
               >
-                Book a Table
+                Book Now
               </Button>
             </div>
           </nav>

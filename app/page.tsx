@@ -44,8 +44,7 @@ function HeroSection() {
           <div className="flex flex-col sm:flex-row gap-4">
             <Button
               variant="primary"
-              href="https://book.mysimpleerb.com/?id=TheRedBull"
-              external
+              href="/book"
             >
               Book a Table
             </Button>
@@ -400,8 +399,7 @@ function CTAStrip() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button
             variant="secondary"
-            href="https://book.mysimpleerb.com/?id=TheRedBull"
-            external
+            href="/book"
           >
             Book a Table
           </Button>
