@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Calendar, Clock, Users, Phone, Mail, User, MessageSquare, CheckCircle, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { supabase } from '@/lib/supabase';
 
 export default function BookPage() {
   const [formData, setFormData] = useState({
@@ -31,16 +32,24 @@ export default function BookPage() {
     setSubmitStatus('idle');
 
     try {
-      const response = await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          'form-name': 'booking-demo',
-          ...formData,
-        }).toString(),
-      });
+      const { data, error } = await supabase
+        .from('bookings')
+        .insert([
+          {
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            date: formData.date,
+            time: formData.time,
+            party_size: parseInt(formData.partySize),
+            notes: formData.notes || '',
+          },
+        ]);
 
-      if (response.ok) {
+      if (error) {
+        console.error('Booking error:', error);
+        setSubmitStatus('error');
+      } else {
         setSubmitStatus('success');
         setSubmittedData(formData);
         setFormData({
@@ -52,10 +61,9 @@ export default function BookPage() {
           partySize: '2',
           notes: '',
         });
-      } else {
-        setSubmitStatus('error');
       }
     } catch (error) {
+      console.error('Unexpected error:', error);
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -272,13 +280,9 @@ export default function BookPage() {
           </div>
 
           <form
-            name="booking-demo"
-            method="POST"
-            data-netlify="true"
             onSubmit={handleSubmit}
             className="bg-white rounded-lg shadow-lg p-8"
           >
-            <input type="hidden" name="form-name" value="booking-demo" />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div>
