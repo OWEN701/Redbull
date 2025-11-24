@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Calendar, Clock, Users, Phone, Mail, User, MessageSquare } from 'lucide-react';
+import { Calendar, Clock, Users, Phone, Mail, User, MessageSquare, CheckCircle, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 export default function BookPage() {
@@ -14,6 +14,7 @@ export default function BookPage() {
     partySize: '2',
     notes: '',
   });
+  const [submittedData, setSubmittedData] = useState<typeof formData | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
@@ -41,6 +42,7 @@ export default function BookPage() {
 
       if (response.ok) {
         setSubmitStatus('success');
+        setSubmittedData(formData);
         setFormData({
           name: '',
           email: '',
@@ -59,6 +61,185 @@ export default function BookPage() {
       setIsSubmitting(false);
     }
   };
+
+  if (submitStatus === 'success' && submittedData) {
+    return (
+      <>
+        <section className="relative h-[40vh] min-h-[300px] flex items-center justify-center">
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage:
+                'url(https://images.pexels.com/photos/5490965/pexels-photo-5490965.jpeg?auto=compress&cs=tinysrgb&w=1920)',
+            }}
+          >
+            <div className="absolute inset-0 bg-neutral-900/70" />
+          </div>
+          <div className="relative z-10 text-center text-white max-w-3xl mx-auto px-4">
+            <CheckCircle className="h-16 w-16 text-green-400 mx-auto mb-4" />
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold mb-6">Thank You!</h1>
+            <p className="text-lg sm:text-xl text-neutral-200">
+              Your booking request has been received
+            </p>
+          </div>
+        </section>
+
+        <section className="py-16 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mx-auto">
+            <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+              <div className="text-center mb-8">
+                <Sparkles className="h-12 w-12 text-amber-600 mx-auto mb-4" />
+                <h2 className="text-3xl font-serif font-bold text-neutral-900 mb-4">
+                  Booking Confirmation
+                </h2>
+                <p className="text-lg text-neutral-600">
+                  We've received your reservation request and will contact you shortly to confirm.
+                </p>
+              </div>
+
+              <div className="bg-neutral-50 rounded-lg p-6 mb-6">
+                <h3 className="text-xl font-semibold text-neutral-900 mb-4">Booking Details</h3>
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <User className="h-5 w-5 text-amber-600 mt-0.5" />
+                    <div>
+                      <p className="text-sm text-neutral-600">Name</p>
+                      <p className="font-medium text-neutral-900">{submittedData.name}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Mail className="h-5 w-5 text-amber-600 mt-0.5" />
+                    <div>
+                      <p className="text-sm text-neutral-600">Email</p>
+                      <p className="font-medium text-neutral-900">{submittedData.email}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Phone className="h-5 w-5 text-amber-600 mt-0.5" />
+                    <div>
+                      <p className="text-sm text-neutral-600">Phone</p>
+                      <p className="font-medium text-neutral-900">{submittedData.phone}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Calendar className="h-5 w-5 text-amber-600 mt-0.5" />
+                    <div>
+                      <p className="text-sm text-neutral-600">Date</p>
+                      <p className="font-medium text-neutral-900">
+                        {new Date(submittedData.date).toLocaleDateString('en-GB', {
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Clock className="h-5 w-5 text-amber-600 mt-0.5" />
+                    <div>
+                      <p className="text-sm text-neutral-600">Time</p>
+                      <p className="font-medium text-neutral-900">{submittedData.time}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Users className="h-5 w-5 text-amber-600 mt-0.5" />
+                    <div>
+                      <p className="text-sm text-neutral-600">Party Size</p>
+                      <p className="font-medium text-neutral-900">
+                        {submittedData.partySize} {submittedData.partySize === '1' ? 'Person' : 'People'}
+                      </p>
+                    </div>
+                  </div>
+                  {submittedData.notes && (
+                    <div className="flex items-start gap-3">
+                      <MessageSquare className="h-5 w-5 text-amber-600 mt-0.5" />
+                      <div>
+                        <p className="text-sm text-neutral-600">Special Requests</p>
+                        <p className="font-medium text-neutral-900">{submittedData.notes}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 mb-6">
+                <h3 className="font-semibold text-amber-900 mb-2">What Happens Next?</h3>
+                <ul className="space-y-2 text-amber-800">
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-600 mt-1">•</span>
+                    <span>We'll review your booking request within the next few hours</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-600 mt-1">•</span>
+                    <span>You'll receive a confirmation email at {submittedData.email}</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-600 mt-1">•</span>
+                    <span>We may call you on {submittedData.phone} to confirm details</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-600 mt-1">•</span>
+                    <span>If you need to make changes, please contact us directly</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button
+                  variant="primary"
+                  href="/"
+                  className="flex-1"
+                >
+                  Return to Homepage
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    setSubmitStatus('idle');
+                    setSubmittedData(null);
+                  }}
+                  className="flex-1"
+                >
+                  Make Another Booking
+                </Button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="text-center p-6 bg-neutral-50 rounded-lg">
+                <Phone className="h-8 w-8 text-amber-600 mx-auto mb-3" />
+                <h3 className="font-semibold text-neutral-900 mb-2">Questions?</h3>
+                <p className="text-sm text-neutral-600 mb-2">
+                  Call us for immediate assistance
+                </p>
+                <a
+                  href="tel:07759044103"
+                  className="text-amber-600 hover:text-amber-700 font-medium"
+                >
+                  07759 044103
+                </a>
+              </div>
+
+              <div className="text-center p-6 bg-neutral-50 rounded-lg">
+                <Mail className="h-8 w-8 text-amber-600 mx-auto mb-3" />
+                <h3 className="font-semibold text-neutral-900 mb-2">Email Us</h3>
+                <p className="text-sm text-neutral-600 mb-2">
+                  For general enquiries
+                </p>
+                <a
+                  href="mailto:info@theredbulleccles.com"
+                  className="text-amber-600 hover:text-amber-700 font-medium"
+                >
+                  info@theredbulleccles.com
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </>
+    );
+  }
 
   return (
     <>
@@ -221,14 +402,6 @@ export default function BookPage() {
                 placeholder="Please let us know if you have any allergies, require a highchair, or have any other special requests..."
               />
             </div>
-
-            {submitStatus === 'success' && (
-              <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                <p className="text-green-800 font-medium">
-                  Booking request received! We'll contact you shortly to confirm your reservation.
-                </p>
-              </div>
-            )}
 
             {submitStatus === 'error' && (
               <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
